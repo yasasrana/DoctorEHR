@@ -14,6 +14,8 @@ router.delete('/delete/:patientId',TokenValidation, controller.deletePatient);
 
 //record functions
 router.post('/records/:patientId', TokenValidation,controller.Addrecord);
+
+router.get('/search', controller.search);
 //router.get('/get/records/:patientId', PatientController.getpatientrec);
 //router.get('/get/search', PatientController.searchpatient);
 

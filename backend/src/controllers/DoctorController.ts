@@ -52,7 +52,7 @@ const login = (req: Request, res: Response) => {
     let dloginReqDto: DloginReqDto = new DloginReqDto(username, password);
 
     const doctor = doctorService.findD(dloginReqDto);
- return doctor
+    return doctor
         .then((user) => {
             if (user.length !== 1) {
                 return res.status(401).json({
@@ -62,12 +62,17 @@ const login = (req: Request, res: Response) => {
 
             bcryptjs.compare(password, user[0].password, (error, result) => {
                 if (error) {
-                    return res.status(401).json({
+                    return res.status(400).json({
                         message: 'Password Mismatch'
                     });
                 } else if (result) {
                     const token = jwt.sign({ _id: user[0]._id }, TOKEN_SECRECT || 'wateveris');
-                    res.json( {"accessToken":token,"username":user[0].username});
+                    res.json({ accessToken: token, username: user[0].username });
+                }
+                else{
+                    return res.status(400).json({
+                        message: 'Password Mismatch'
+                    });
                 }
             });
         })

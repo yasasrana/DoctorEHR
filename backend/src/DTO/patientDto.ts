@@ -18,6 +18,25 @@ export class PcreateReqDto {
     }
 }
 
+export class PcreateResDto {
+    constructor(
+        public readonly _id: string | undefined,
+        public readonly firstname: string | undefined,
+        public readonly lastname: string | undefined,
+        public readonly telephone: string | undefined,
+        public readonly dob: string | undefined,
+        public readonly sex: string | undefined,
+        public readonly records: Array<string> | undefined
+    ) {}
+
+    static from(body: Partial<PcreateResDto>): PcreateResDto {
+        return new PcreateResDto(body._id,body.firstname, body.lastname, body.telephone, body.dob, body.sex, body.records);
+    }
+
+    static fromMany(patients: IPatient[]) {
+        return patients.map((patient) => PcreateResDto.from(patient));
+    }
+}
 export class PgetReqDto {
     constructor(public readonly _id: string | undefined) {}
 

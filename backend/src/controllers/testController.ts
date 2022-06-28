@@ -8,6 +8,7 @@ import { NextFunction, Request, Response } from 'express';
 import { RcreateReqDto } from '../DTO/recordsDto';
 import { RecordsRepository } from '../repository/reacordsrepo';
 import { RecordsService } from '../services/records';
+import Patient from '../models/Patient';
 
 const patientService: PatientService = new PatientService(new PatientRepository());
 const recordService: RecordsService = new RecordsService(new RecordsRepository());
@@ -40,7 +41,7 @@ const Addrecord = async (req: Request, res: Response) => {
 
     const record = await recordService.createR(rcreateReqDto);
 
-    console.log(record._id);
+    console.log(record);
 
     const patientId = req.params.patientId;
 
@@ -107,4 +108,26 @@ const deletePatient = async (req: Request, res: Response) => {
     }
 };
 
-export default { testFunc, readPatient, readAllPatients, updatePatient, deletePatient, Addrecord };
+const search = async (req: Request, res: Response) => {
+    try {
+        let result = await Patient.aggregate([
+            {
+                $search: {
+                    autocomplete: {
+                        query: `${req.query.term}`,
+                        path: 'firstname',
+                        fuzzy: {
+                            maxEdits: 2
+                        }
+                    }
+                }
+            }
+        ]);
+
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+};
+
+export default { search, testFunc, readPatient, readAllPatients, updatePatient, deletePatient, Addrecord };

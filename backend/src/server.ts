@@ -6,6 +6,7 @@ import patientroutes from './routes/PatientRoutes';
 import doctorroutes from './routes/DoctorRoutes';
 import dotenv from 'dotenv';
 import Cors from 'cors';
+
 dotenv.config();
 const router = express();
 
@@ -46,7 +47,10 @@ const StartServer = () => {
     router.use('/doctor', doctorroutes);
 
     //test
-    router.get('/ping', (req, res, next) => res.status(200).json({ message: 'pong' }));
+    router.get('/ping', (req, res, next) => {
+        var date = new Date("2013-03-10T02:00:00Z");
+      date.toISOString().substring(0, 10);
+        res.status(200).json({ message: date.toISOString().substring(0, 10) })});
 
     //error handling
     router.use((req, res, next) => {
